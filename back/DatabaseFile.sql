@@ -64,21 +64,28 @@ CREATE TABLE an_organization.donation_center (
     donation_center_password_hash VARCHAR(100) NOT NULL,
     organization_name VARCHAR(100) NOT NULL,
     street_address_one VARCHAR(100) NOT NULL,
-    -- Not null since this is assuming
-    -- a donation center can have no items.
-    donation_center_inventory VARCHAR(100),
     donation_center_wishlist VARCHAR(100),
     CONSTRAINT foreign_address
         FOREIGN KEY (street_address_one)
         REFERENCES location(street_address_one)
         ON DELETE CASCADE,
-    CONSTRAINT foreign_center_inventory
-        FOREIGN KEY (donation_center_inventory)
-        REFERENCES items(item_name)
-        ON DELETE CASCADE,
     CONSTRAINT foreign_center_wishlist
         FOREIGN KEY (donation_center_wishlist)
         REFERENCES  category_items(item_name)
+        ON DELETE CASCADE
+)
+ENGINE = InnoDB;
+
+CREATE TABLE wishlist_items (
+    wishlist_item_name VARCHAR(100) PRIMARY KEY NOT NULL,
+    donation_center_name VARCHAR(100) PRIMARY KEY NOT NULL,
+    CONSTRAINT foreign_wishlist
+        FOREIGN KEY (wishlist_item_name)
+        REFERENCES  category_items(item_name)
+        ON DELETE CASCADE,
+    CONSTRAINT foreign_donation_center
+        FOREIGN KEY (donation_center_name)
+        REFERENCES donation_center(donation_center_name)
         ON DELETE CASCADE
 )
 ENGINE = InnoDB;
