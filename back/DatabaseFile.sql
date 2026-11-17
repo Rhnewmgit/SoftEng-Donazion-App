@@ -16,29 +16,70 @@ CREATE TABLE an_organization.organization (
 )
 ENGINE = InnoDB;
 
-CREATE TABLE an_organization.theItems (
+CREATE TABLE an_organization.category_items (
+    item_name VARCHAR(100) PRIMARY KEY NOT NULL,
+    item_low_price INT NOT NULL,
+    item_high_amount INT NOT NULL
+)
+ENGINE = InnoDB;
+
+CREATE TABLE an_organization.category (
+    category_name VARCHAR(100) PRIMARY KEY UNIQUE NOT NULL,
+    category_item_name VARCHAR(100) NOT NULL,
+    CONSTRAINT foreign_category_item_names
+        FOREIGN KEY (category_item_name)
+        REFERENCES  category_items(item_name)
+        ON DELETE CASCADE
+)
+ENGINE = InnoDB;
+
+CREATE TABLE an_organization.items (
     item_name VARCHAR(100) PRIMARY KEY NOT NULL,
     item_price INT NOT NULL,
-    item_amount INT NOT NULL
+    category_item_name VARCHAR(100) NOT NULL,
+    CONSTRAINT foreign_category_item_name
+        FOREIGN KEY (category_item_name)
+        REFERENCES  category_items(item_name)
+        ON DELETE CASCADE
+)
+ENGINE = InnoDB;
+
+CREATE TABLE an_organization.location (
+    -- Both of these are decimals since location
+    -- points aren't restricted to exact values.
+    latitude DECIMAL NOT NULL,
+    longitude DECIMAL NOT NULL,
+    location_coordinates POINT GENERATED ALWAYS AS (ST_SRID(POINT(latitude, longitude), 4326)) STORED NOT NULL,
+    street_address_one VARCHAR(100) PRIMARY KEY NOT NULL,
+    -- Street address 2 can be null since not every donation center
+    -- has additional info regarding their location such as apartment number.
+    street_address_two VARCHAR(100),
+    city VARCHAR(100) NOT NULL,
+    state VARCHAR(100) NOT NULL,
+    zip INT NOT NULL
 )
 ENGINE = InnoDB;
 
 CREATE TABLE an_organization.donation_center (
     donation_center_name VARCHAR(100) PRIMARY KEY UNIQUE NOT NULL,
+    donation_center_password VARCHAR(100) NOT NULL,
     organization_name VARCHAR(100) NOT NULL,
-    street_address VARCHAR(100) NOT NULL,
-    gps_location POINT NOT NULL SRID 4326,
-    zip_code INT NOT NULL,
+    street_address_one VARCHAR(100) NOT NULL,
     -- Not null since this is assuming
     -- a donation center can have no items.
-    item_name VARCHAR(100),
-    CONSTRAINT foreign_key_organization
-        FOREIGN KEY (organization_name)
-        REFERENCES organization(organization_name)
+    donation_center_inventory VARCHAR(100),
+    donation_center_wishlist VARCHAR(100),
+    CONSTRAINT foreign_address
+        FOREIGN KEY (street_address_one)
+        REFERENCES location(street_address_one)
         ON DELETE CASCADE,
-    CONSTRAINT foreign_key_items
-        FOREIGN KEY (item_name)
-        REFERENCES  theItems(item_name)
+    CONSTRAINT foreign_center_inventory
+        FOREIGN KEY (donation_center_inventory)
+        REFERENCES items(item_name)
+        ON DELETE CASCADE,
+    CONSTRAINT foreign_center_wishlist
+        FOREIGN KEY (donation_center_wishlist)
+        REFERENCES  category_items(item_name)
         ON DELETE CASCADE
 )
 ENGINE = InnoDB;
