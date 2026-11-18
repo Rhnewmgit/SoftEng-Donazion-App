@@ -6,7 +6,7 @@ export default function DonationCenter() {
     <div className={styles.page}>
       <main className={styles.main}>
 
-        <h1>Login</h1>
+        <h1>Donation Center Login</h1>
 
         <div className={styles.ctas}>
 
@@ -21,11 +21,11 @@ export default function DonationCenter() {
 
           {/* NEXT BUTTON    Categories & Items*/}
 
-          <a
+          <Link
             className={styles.primary}
             href="/donation-center/dashboard">
             Register
-          </a>
+          </Link>
 
 
         </div>
