@@ -19,7 +19,7 @@ export default function LoginPage() {
             Login
           </Link>
 
-          {/* NEXT BUTTON    Catagories & Items*/}
+          {/* NEXT BUTTON    Categories & Items*/}
 
           <a
             className={styles.primary}

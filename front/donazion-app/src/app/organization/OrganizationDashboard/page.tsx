@@ -45,7 +45,7 @@ export default function OrganizationDashboard() {
 
         <h1>Organization Dashboard</h1>
 
-        <Link href="/">← Log Out</Link>
+        <Link href="/organization">← Log Out</Link>
       </main>
     </div>
   );
