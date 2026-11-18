@@ -1,7 +1,10 @@
+'use client'
 import Link from "next/link";
 import styles from "@/app/page.module.css";
+import { useRequireOrgLogin, logOutOrg } from "@/lib/orgAuth";
 
 export default function Categories() {
+  useRequireOrgLogin();
   return (
     <div className={styles.page}>
       <main className={styles.main}>
@@ -45,7 +48,7 @@ export default function Categories() {
 
         <h1>Categories and Items</h1>
 
-        <Link href="/organization">← Log Out</Link>
+        <Link href="/organization" onClick={logOutOrg}>← Log Out</Link>
       </main>
     </div>
   );

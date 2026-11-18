@@ -1,7 +1,10 @@
+'use client'
 import Link from "next/link";
 import styles from "@/app/page.module.css";
+import { useRequireOrgLogin, logOutOrg } from "@/lib/orgAuth";
 
 export default function DonationCenter() {
+  useRequireOrgLogin();
   return (
     <div className={styles.page}>
       <main className={styles.main}>
