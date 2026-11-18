@@ -48,7 +48,7 @@ export default function DonationCenter() {
 
         <h1>Donation Centers</h1>
 
-        <Link href="/organization">← Log Out</Link>
+        <Link href="/organization" onClick={logOutOrg}>← Log Out</Link>
       </main>
     </div>
   );
