@@ -1,5 +1,6 @@
 import Image from "next/image";
 import styles from "./page.module.css";
+import Link from "next/link";
 
 export default function Home() {
   return (
@@ -36,36 +37,27 @@ export default function Home() {
 
           {/* NEXT BUTTON    Doner Dashboard*/}
 
-          <a
-            className={styles.primary}
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
+          <Link
+            className={styles.primary} 
+            href="/donor">
             Doner Dashboard
-          </a>
+          </Link>
 
            {/* NEXT BUTTON    Organization     was      styles.secondary*/}
 
-          <a
+          <Link
             className={styles.primary}
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
+            href="/organization">
             Organization
-          </a>
+          </Link>
 
           {/* NEXT BUTTON    Donation Center */}
 
-          <a
+          <Link
             className={styles.primary}
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
+            href="/donation-center">
             Donation Center
-          </a>
+          </Link>
 
         </div>
       </main>
