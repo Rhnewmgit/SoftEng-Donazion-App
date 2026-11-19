@@ -77,8 +77,9 @@ CREATE TABLE an_organization.donation_center (
 ENGINE = InnoDB;
 
 CREATE TABLE wishlist_items (
-    wishlist_item_name VARCHAR(100) PRIMARY KEY NOT NULL,
-    donation_center_name VARCHAR(100) PRIMARY KEY NOT NULL,
+    wishlist_item_name VARCHAR(100) NOT NULL,
+    donation_center_name VARCHAR(100) NOT NULL,
+    PRIMARY KEY (wishlist_item_name, donation_center_name),
     CONSTRAINT foreign_wishlist
         FOREIGN KEY (wishlist_item_name)
         REFERENCES  category_items(item_name)
