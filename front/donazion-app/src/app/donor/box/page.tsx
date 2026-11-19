@@ -9,7 +9,7 @@ export default function DonorBox() {
         <h1>Prepare Box</h1>
 
         <Link href="/donor">← Show Dashboard</Link>
-        
+      
       </main>
     </div>
   );

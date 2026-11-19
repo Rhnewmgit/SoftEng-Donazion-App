@@ -23,7 +23,7 @@ export default function Home() {
 
 
 
-           <p>
+          <p>
             login / register{" "}
           </p> 
 

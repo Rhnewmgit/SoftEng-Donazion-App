@@ -47,3 +47,13 @@ a {
     color-scheme: dark;
   }
 }
+
+.table-row{
+  display: grid;
+  grid-template-columns: 100px 100px 100px;
+  align-items: center;
+}
+
+.table-row.header{
+  font-weight: bold;
+}
