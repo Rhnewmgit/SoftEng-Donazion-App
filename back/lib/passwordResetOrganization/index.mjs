@@ -84,14 +84,25 @@ export const handler = async (event) => {
 		return constructResponse(400, "invalid token, log back in first: " + err?.message)
 	}
 
+	// Old pass
+	try {
+		// const oldHash = await getOrgHash();
+		const oldHash = "$2a$10$5ADQChPhMnyXiQ.dYWk/zus6SQQJWTrTa604iLQOoXpn3dD7Dr9g2"
+		if (!bcrypt.compareSync(oldPass, oldHash)) {
+			return constructResponse("password was incorrect")
+		}
+		// await setNewHash(newHash)
+	} catch (err) {
+		return constructResponse(400, "SQL error:" + err)
+	}
+
 	// Token and old password accepted; update to new password
 	try {
 		const saltRounds = 10;
 		const newHash = bcrypt.hashSync(newPass, saltRounds)
 		// await setNewHash(newHash)
-		console.log(newHash) // TESTING
 	} catch (err) {
-		constructResponse(400, "SQL error:" + err)
+		return constructResponse(400, "SQL error:" + err)
 	}
 
 	const newToken = jwt.sign({admin: true}, config.jwt_secret, {expiresIn: "24h"})
