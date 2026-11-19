@@ -1,23 +1,11 @@
-'use client';
+'use client'
 import Link from "next/link";
 import React from 'react';
 import styles from "@/app/page.module.css";
-import { INSPECT_MAX_BYTES } from "buffer";
+import { useRequireOrgLogin, logOutOrg } from "@/lib/orgAuth";
 
 export default function Categories() {
-  const [categoryName, setCategoryName] = React.useState("");
-  const [categories, setCategories] = React.useState<string[]>([]);
-  const [selectedCategory, setSelectedCategory] = React.useState("");
-  const [items, setItems] = React.useState<string[]>([]);
-
-  const addCategory = (name: string) => {
-    const trimmedName = name.trim();
-    if (!trimmedName || categories.includes(trimmedName)) return;
-
-    setCategories((prevCategories) => [...prevCategories, trimmedName]);
-    setCategoryName(""); 
-  }
-
+  useRequireOrgLogin();
   return (
     <div className={styles.page}>
       <main className={styles.main}>
@@ -116,7 +104,7 @@ export default function Categories() {
           </div>
         </div>
 
-        <Link href="/organization">← Log Out</Link>
+        <Link href="/organization" onClick={logOutOrg}>← Log Out</Link>
       </main>
     </div>
   );

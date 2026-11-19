@@ -70,7 +70,7 @@
   font-size: 14px;
 }
 
-.ctas a {
+.ctas a, .ctas button {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -84,7 +84,7 @@
   font-weight: 500;
 }
 
-a.primary {
+a.primary, button.primary {
   background: var(--text-primary);
   color: var(--background);
   gap: 8px;
