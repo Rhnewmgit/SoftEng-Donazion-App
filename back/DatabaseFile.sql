@@ -12,7 +12,7 @@ USE an_organization;
 
 CREATE TABLE an_organization.organization (
     organization_name VARCHAR(100) PRIMARY KEY UNIQUE NOT NULL,
-    password_login_string VARCHAR(100) NOT NULL
+    password_hash VARCHAR(100) NOT NULL,
 )
 ENGINE = InnoDB;
 
