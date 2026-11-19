@@ -1,7 +1,7 @@
 import { config } from './config.mjs'
-import mysql from 'mysql'
+import mysql from 'mysql2'
+import bcrypt from 'bcryptjs'
 import jwt from 'jsonwebtoken'
-import bcrypt from 'bcrpyt'
 
 /** Testing:
  * 	bcrypt hash, 10 salting rounds:
@@ -94,7 +94,7 @@ export const handler = async (event) => {
 		constructResponse(400, "SQL error:" + err)
 	}
 
-	const newToken = jwt.sign({admin: true}, config.jwt_secret)
+	const newToken = jwt.sign({admin: true}, config.jwt_secret, {expiresIn: "24h"})
 	const result = {
 		"token": newToken
 	}
