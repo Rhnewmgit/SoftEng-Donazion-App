@@ -2,7 +2,7 @@ DROP DATABASE IF EXISTS an_organization;
 
 -- Notes:
 -- - Unless if specified otherwise for a reason,
---   ALL TABLE VALUES ARE SET TO NOT NULL.
+--   ALL TABLE VALUES ARE TO BE SET TO NOT NULL.
 
 CREATE SCHEMA an_organization
     DEFAULT CHARACTER SET utf8mb4
