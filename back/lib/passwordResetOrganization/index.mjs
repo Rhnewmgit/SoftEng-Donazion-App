@@ -25,7 +25,7 @@ var pool = mysql.createPool({
 
 function getOrgHash() {
 	return new Promise((resolve, reject) => {
-		pool.query("SELECT * FROM organization", [value], (err, rows) => {
+		pool.query("SELECT * FROM organization", (err, rows) => {
 			if (err) { return reject(err.sqlMessage) }
 			if ((rows)) {
 				if (rows.length > 1) {
@@ -41,16 +41,12 @@ function getOrgHash() {
 
 function setNewHash(newHash) {
 	return new Promise((resolve, reject) => {
-		pool.query("Update organization	SET ", [value], (err, rows) => {
+		pool.query("Update organization	SET password_hash=?", [newHash], (err, res) => {
 			if (err) { return reject(err.sqlMessage) }
-			console.log(rows) //TESTING
-			if ((rows)) {
-				if (rows.length > 1) {
-					return reject(`${rows.length} different rows in organization found`)
-				}
-				return resolve(rows[0]?.password_hash)
+			if ((res?.affectedRows) > 0) {
+				return resolve(res.affectedRows)
 			} else {
-				return reject("unable to locate organization's data")
+				return reject("failed to update organization password")
 			}
 		})
 	})
@@ -68,11 +64,11 @@ export const handler = async (event) => {
 		}
 	}
 
-	if (newPass === oldPass) {
-		return constructResponse(400, "new password same as old password")
-	}
 	if (!newPass) {
 		return constructResponse(400, "no new password provided")
+	}
+	if (newPass === oldPass) {
+		return constructResponse(400, "new password same as old password")
 	}
 
 	try {
@@ -86,19 +82,17 @@ export const handler = async (event) => {
 
 	// Old pass
 	try {
-		// const oldHash = await getOrgHash();
-		const oldHash = "$2a$10$5ADQChPhMnyXiQ.dYWk/zus6SQQJWTrTa604iLQOoXpn3dD7Dr9g2"
+		const oldHash = await getOrgHash();
 		if (!bcrypt.compareSync(oldPass, oldHash)) {
 			return constructResponse("password was incorrect")
 		}
-		// await setNewHash(newHash)
 	} catch (err) {
 		return constructResponse(400, "SQL error:" + err)
 	}
 
 	// Token and old password accepted; update to new password
 	try {
-		const saltRounds = 10;
+		const saltRounds = 8;
 		const newHash = bcrypt.hashSync(newPass, saltRounds)
 		// await setNewHash(newHash)
 	} catch (err) {
@@ -112,3 +106,9 @@ export const handler = async (event) => {
 
 	return constructResponse(200, result)
 }
+
+// console.log(await handler({
+//   "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhZG1pbiI6dHJ1ZX0.AJHyg8Uqb1A6X9G55ubrTnCw232DGfQiigl8RR3vkXc",
+//   "oldPass": "wrongbadincorrectpassword",
+//   "newPass": "newpass"
+// }))
