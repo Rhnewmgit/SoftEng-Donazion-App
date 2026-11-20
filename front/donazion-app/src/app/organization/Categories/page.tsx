@@ -36,48 +36,34 @@ export default function Categories() {
       setCategories((prev) => [...prev, {name: trimmed, items: []}])
     }
 
-    const addItemToCategory = (
-  category: Category,
-  itemName: string,
-  itemLowPrice: number,
-  itemHighPrice: number
-) => {
-  const trimmed = itemName.trim();
-  if (!trimmed) return;
+  const addItemToCategory = (category: Category, itemName: string, itemLowPrice: number, itemHighPrice: number) => {
+      const trimmed = itemName.trim();
+      if (!trimmed) return;
 
-  if (
-    !Number.isFinite(itemLowPrice) ||
-    !Number.isFinite(itemHighPrice) ||
-    itemLowPrice < 0 ||
-    itemHighPrice < itemLowPrice
-  ) return;
+      if (!Number.isFinite(itemLowPrice) || !Number.isFinite(itemHighPrice) || itemLowPrice < 0 || itemHighPrice < itemLowPrice) return;
 
-  const newItem: Item = {
-    name: trimmed,
-    lowPrice: itemLowPrice,
-    highPrice: itemHighPrice
-  };
+      const newItem: Item = {
+      name: trimmed,
+      lowPrice: itemLowPrice,
+      highPrice: itemHighPrice
+      }
 
-  setCategories((prev) =>
-    prev.map((cat) => {
+      setCategories((prev) =>
+      prev.map((cat) => {
       if (cat.name !== category.name) {
         return cat;
       }
 
       const hasItem = cat.items.some(
-        (item) =>
-          item.name.trim().toLowerCase() === trimmed.toLowerCase()
-      );
+        (item) => item.name.trim().toLowerCase() === trimmed.toLowerCase()
+      )
 
-      if (hasItem) return cat;
+      if (hasItem) return cat
 
-      return {
-        ...cat,
-        items: [...cat.items, newItem]
-      };
-    })
-  );
-};
+      return {...cat, items: [...cat.items, newItem]}
+        })
+      )
+    }
 
   const [categories, setCategories] = React.useState<Category[]>([])
   const [categoryName, setCategoryName] = React.useState<string>("")
