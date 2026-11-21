@@ -121,7 +121,12 @@ export default function ReigsterDonationCenter(){
             Register
           </button>
 
+          
+
           {error && <p style={{color: "red"}}>{error}</p>}
+          
+          <Link href="/">← back</Link>
+          
 
 
         </main>
