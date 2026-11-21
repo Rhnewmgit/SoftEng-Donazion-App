@@ -54,6 +54,9 @@ function setNewHash(newHash) {
 }
 
 export const handler = async (event) => {
+	if (event?.body) {
+		event = JSON.parse(event.body)
+	}
 	const token = event?.token
 	const oldPass = event?.oldPass
 	const newPass = event?.newPass
