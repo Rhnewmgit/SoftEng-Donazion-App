@@ -23,11 +23,16 @@ export class BackStack extends cdk.Stack {
     })
 
     // NOTE: You First have to add RDS_USER and RDS_PASSWORD to
-    // your environment variables for your account. Same with RDS_DATABASE and RDS_HOST
-    const rdsUser = process.env.RDS_USER!
-    const rdsPassword = process.env.RDS_PASSWORD!
-    const rdsDatabase = process.env.RDS_DATABASE!
-    const rdsHost = process.env.RDS_HOST!
+    // your environment variables Same with RDS_DATABASE and RDS_HOST
+
+    // Contains all environment variables for RDS and the JWT secret
+    const environment = {
+      RDS_USER: process.env.RDS_USER!,
+      RDS_PASSWORD: process.env.RDS_PASSWORD!,
+      RDS_DATABASE: process.env.RDS_DATABASE!,
+      RDS_HOST: process.env.RDS_HOST!,
+      JWT_SECRET: process.env.JWT_SECRET!,
+    }
 
     // generic default handler for any API function that doesn't get its own Lambda method
     const default_fn = new lambdaNodejs.NodejsFunction(this, "LambdaDefaultFunction", {
@@ -36,7 +41,7 @@ export class BackStack extends cdk.Stack {
       code: lambda.Code.fromAsset(path.join(__dirname, "default")),
       vpc: vpc, // Reference the VPC defined above
       securityGroups: [securityGroup], // Associate the security group
-      timeout: Duration.seconds(3), // Example timeout, adjust as needed
+      timeout: Duration.seconds(5), // Example timeout, adjust as needed
     })
 
     const api_endpoint = new apigw.LambdaRestApi(this, `donazionappapi`, {
@@ -149,61 +154,29 @@ export class BackStack extends cdk.Stack {
       ],
     }
 
-    // Add a POST method to the '/todo/create' resource
-    const create_fn = new lambdaNodejs.NodejsFunction(this, "CreateFunction", {
+    // Add a POST method to the '/organization/category/add' resource
+    const addCategory_fn = new lambdaNodejs.NodejsFunction(this, "OrganizationAddCategory", {
       runtime: lambda.Runtime.NODEJS_22_X,
-      handler: "create.handler",
-      code: lambda.Code.fromAsset(path.join(__dirname, "create")),
+      handler: "index.handler",
+      code: lambda.Code.fromAsset(path.join(__dirname, "addCategory")),
       vpc: vpc, // Reference the VPC defined above
-      environment: {
-        // Define your environment variables here
-        RDS_USER: process.env.RDS_USER!,
-        RDS_PASSWORD: process.env.RDS_PASSWORD!,
-        RDS_DATABASE: process.env.RDS_DATABASE!,
-        RDS_HOST: process.env.RDS_HOST!,
-      },
+      environment: environment,
       securityGroups: [securityGroup], // Associate the security group
-      timeout: Duration.seconds(3), // Example timeout, adjust as needed
+      timeout: Duration.seconds(5), // Example timeout, adjust as needed
     })
 
-    createResource.addMethod("POST", new apigw.LambdaIntegration(create_fn, integration_parameters), response_parameters)
+    organizationCategoryAddResource.addMethod('POST', new apigw.LambdaIntegration(addCategory_fn, integration_parameters), response_parameters)
 
-    // Add a POST method to the '/todo/append' resource
-    const append_fn = new lambdaNodejs.NodejsFunction(this, "AppendFunction", {
+    const passwordResetOrganization_fn = new lambdaNodejs.NodejsFunction(this, "OrganizationResetPassword", {
       runtime: lambda.Runtime.NODEJS_22_X,
-      handler: "append.handler",
-      code: lambda.Code.fromAsset(path.join(__dirname, "append")),
+      handler: "index.handler",
+      code: lambda.Code.fromAsset(path.join(__dirname, "passwordResetOrganization")),
       vpc: vpc, // Reference the VPC defined above
-      environment: {
-        // Define your environment variables here
-        RDS_USER: process.env.RDS_USER!,
-        RDS_PASSWORD: process.env.RDS_PASSWORD!,
-        RDS_DATABASE: process.env.RDS_DATABASE!,
-        RDS_HOST: process.env.RDS_HOST!,
-      },
+      environment: environment,
       securityGroups: [securityGroup], // Associate the security group
-      timeout: Duration.seconds(3), // Example timeout, adjust as needed
+      timeout: Duration.seconds(5), // Example timeout, adjust as needed
     })
 
-    appendResource.addMethod("POST", new apigw.LambdaIntegration(append_fn, integration_parameters), response_parameters)
-
-    // Add a POST method to the '/todo/delete' resource
-    const delete_fn = new lambdaNodejs.NodejsFunction(this, "DeleteFunction", {
-      runtime: lambda.Runtime.NODEJS_22_X,
-      handler: "delete.handler",
-      code: lambda.Code.fromAsset(path.join(__dirname, "delete")),
-      vpc: vpc, // Reference the VPC defined above
-      environment: {
-        // Define your environment variables here
-        RDS_USER: process.env.RDS_USER!,
-        RDS_PASSWORD: process.env.RDS_PASSWORD!,
-        RDS_DATABASE: process.env.RDS_DATABASE!,
-        RDS_HOST: process.env.RDS_HOST!,
-      },
-      securityGroups: [securityGroup], // Associate the security group
-      timeout: Duration.seconds(3), // Example timeout, adjust as needed
-    })
-
-    deleteResource.addMethod("POST", new apigw.LambdaIntegration(delete_fn, integration_parameters), response_parameters)
+    organizationPasswordresetResource.addMethod('POST', new apigw.LambdaIntegration(passwordResetOrganization_fn, integration_parameters), response_parameters)
   }
 }
