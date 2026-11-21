@@ -6,6 +6,7 @@ import * as lambdaNodejs from "aws-cdk-lib/aws-lambda-nodejs"
 import * as path from "node:path"
 import * as ec2 from "aws-cdk-lib/aws-ec2"
 import { Duration } from "aws-cdk-lib"
+import 'dotenv/config'
 
 export class BackStack extends cdk.Stack {
   constructor(scope: Construct, id: string, props?: cdk.StackProps) {
@@ -77,8 +78,8 @@ export class BackStack extends cdk.Stack {
     const donationcenterInventoryResource = donationcenterResource.addResource("inventory")
     const donationcenterWishlistResource = donationcenterResource.addResource("wishlist")
     // /api/donationcenter/wishlist/  
-    const donationcenterWishlistAddResource = donationcenterResource.addResource("add")
-    const donationcenterWishlistRemoveResource = donationcenterResource.addResource("remove")
+    const donationcenterWishlistAddResource = donationcenterWishlistResource.addResource("add")
+    const donationcenterWishlistRemoveResource = donationcenterWishlistResource.addResource("remove")
 
     // /api/organization/ 
     const organizationLoginResource = organizationResource.addResource("login")
@@ -98,7 +99,8 @@ export class BackStack extends cdk.Stack {
 
     // https://github.com/aws/aws-cdk/blob/main/packages/aws-cdk-lib/aws-apigateway/README.md
     const integration_parameters = {
-      proxy: false,
+      proxy: true,
+      responseTransferMode: apigw.ResponseTransferMode.BUFFERED,
       passthroughBehavior: apigw.PassthroughBehavior.WHEN_NO_MATCH,
 
       integrationResponses: [
@@ -155,17 +157,17 @@ export class BackStack extends cdk.Stack {
     }
 
     // Add a POST method to the '/organization/category/add' resource
-    const addCategory_fn = new lambdaNodejs.NodejsFunction(this, "OrganizationAddCategory", {
-      runtime: lambda.Runtime.NODEJS_22_X,
-      handler: "index.handler",
-      code: lambda.Code.fromAsset(path.join(__dirname, "addCategory")),
-      vpc: vpc, // Reference the VPC defined above
-      environment: environment,
-      securityGroups: [securityGroup], // Associate the security group
-      timeout: Duration.seconds(5), // Example timeout, adjust as needed
-    })
-
-    organizationCategoryAddResource.addMethod('POST', new apigw.LambdaIntegration(addCategory_fn, integration_parameters), response_parameters)
+    // const addCategory_fn = new lambdaNodejs.NodejsFunction(this, "OrganizationAddCategory", {
+    //   runtime: lambda.Runtime.NODEJS_22_X,
+    //   handler: "index.handler",
+    //   code: lambda.Code.fromAsset(path.join(__dirname, "addCategory")),
+    //   vpc: vpc, // Reference the VPC defined above
+    //   environment: environment,
+    //   securityGroups: [securityGroup], // Associate the security group
+    //   timeout: Duration.seconds(5), // Example timeout, adjust as needed
+    // })
+    //
+    // organizationCategoryAddResource.addMethod('POST', new apigw.LambdaIntegration(addCategory_fn, integration_parameters), response_parameters)
 
     const passwordResetOrganization_fn = new lambdaNodejs.NodejsFunction(this, "OrganizationResetPassword", {
       runtime: lambda.Runtime.NODEJS_22_X,
