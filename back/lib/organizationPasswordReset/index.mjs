@@ -88,7 +88,7 @@ export const handler = async (event) => {
 	try {
 		const oldHash = await getOrgHash();
 		if (!bcrypt.compareSync(oldPass, oldHash)) {
-			return constructResponse("password was incorrect")
+			return constructResponse(400, "password was incorrect")
 		}
 	} catch (err) {
 		return constructResponse(400, "SQL error:" + err)

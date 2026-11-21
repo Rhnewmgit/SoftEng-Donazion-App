@@ -169,7 +169,7 @@ export class BackStack extends cdk.Stack {
     //
     // organizationCategoryAddResource.addMethod('POST', new apigw.LambdaIntegration(addCategory_fn, integration_parameters), response_parameters)
 
-    const passwordResetOrganization_fn = new lambdaNodejs.NodejsFunction(this, "OrganizationResetPassword", {
+    const organizationPasswordReset_fn = new lambdaNodejs.NodejsFunction(this, "OrganizationResetPassword", {
       runtime: lambda.Runtime.NODEJS_22_X,
       handler: "index.handler",
       code: lambda.Code.fromAsset(path.join(__dirname, "organizationPasswordReset")),
@@ -179,6 +179,19 @@ export class BackStack extends cdk.Stack {
       timeout: Duration.seconds(5), // Example timeout, adjust as needed
     })
 
-    organizationPasswordresetResource.addMethod('POST', new apigw.LambdaIntegration(passwordResetOrganization_fn, integration_parameters), response_parameters)
+    organizationPasswordresetResource.addMethod('POST', new apigw.LambdaIntegration(organizationPasswordReset_fn, integration_parameters), response_parameters)
+
+    const organizationLogin_fn = new lambdaNodejs.NodejsFunction(this, "OrganizationLogin", {
+      runtime: lambda.Runtime.NODEJS_22_X,
+      handler: "index.handler",
+      code: lambda.Code.fromAsset(path.join(__dirname, "organizationLogin")),
+      vpc: vpc, // Reference the VPC defined above
+      environment: environment,
+      securityGroups: [securityGroup], // Associate the security group
+      timeout: Duration.seconds(5), // Example timeout, adjust as needed
+    })
+
+    organizationLoginResource.addMethod('POST', new apigw.LambdaIntegration(organizationLogin_fn, integration_parameters), response_parameters)
+
   }
 }
