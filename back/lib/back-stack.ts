@@ -172,7 +172,7 @@ export class BackStack extends cdk.Stack {
     const passwordResetOrganization_fn = new lambdaNodejs.NodejsFunction(this, "OrganizationResetPassword", {
       runtime: lambda.Runtime.NODEJS_22_X,
       handler: "index.handler",
-      code: lambda.Code.fromAsset(path.join(__dirname, "passwordResetOrganization")),
+      code: lambda.Code.fromAsset(path.join(__dirname, "organizationPasswordReset")),
       vpc: vpc, // Reference the VPC defined above
       environment: environment,
       securityGroups: [securityGroup], // Associate the security group

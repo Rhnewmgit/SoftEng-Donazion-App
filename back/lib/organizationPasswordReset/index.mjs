@@ -1,4 +1,3 @@
-import { config } from './config.mjs'
 import mysql from 'mysql2'
 import bcrypt from 'bcryptjs'
 import jwt from 'jsonwebtoken'
@@ -17,11 +16,13 @@ import jwt from 'jsonwebtoken'
  */
 
 var pool = mysql.createPool({
-	host: config.host,
-	user: config.user,
-	password: config.password,
-	database: config.database
+	host: process.env.RDS_HOST,
+	user: process.env.RDS_USER,
+	password: process.env.RDS_PASSWORD,
+	database: process.env.RDS_DATABASE
 })
+
+const jwt_secret = process.env.JWT_SECRET
 
 function getOrgHash() {
 	return new Promise((resolve, reject) => {
@@ -72,7 +73,7 @@ export const handler = async (event) => {
 	}
 
 	try {
-		const data = jwt.verify(token, config.jwt_secret)
+		const data = jwt.verify(token, jwt_secret)
 		if (!data?.admin) {
 			return constructResponse(400, "invalid token, log back in first")
 		}
@@ -94,12 +95,12 @@ export const handler = async (event) => {
 	try {
 		const saltRounds = 8;
 		const newHash = bcrypt.hashSync(newPass, saltRounds)
-		// await setNewHash(newHash)
+		await setNewHash(newHash)
 	} catch (err) {
 		return constructResponse(400, "SQL error:" + err)
 	}
 
-	const newToken = jwt.sign({admin: true}, config.jwt_secret, {expiresIn: "24h"})
+	const newToken = jwt.sign({admin: true}, jwt_secret, {expiresIn: "24h"})
 	const result = {
 		"token": newToken
 	}
