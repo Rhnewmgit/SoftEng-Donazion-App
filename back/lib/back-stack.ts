@@ -228,7 +228,7 @@ export class BackStack extends cdk.Stack {
       timeout: Duration.seconds(5), // Example timeout, adjust as needed
     })
 
-    donationcenterLoginResource.addMethod('POST', new apigw.LambdaIntegration(donorListcenter_fn, integration_parameters), response_parameters)
+    donorListCenterResource.addMethod('POST', new apigw.LambdaIntegration(donorListcenter_fn, integration_parameters), response_parameters)
 
 
   }
