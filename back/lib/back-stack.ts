@@ -193,5 +193,43 @@ export class BackStack extends cdk.Stack {
 
     organizationLoginResource.addMethod('POST', new apigw.LambdaIntegration(organizationLogin_fn, integration_parameters), response_parameters)
 
+    // const organizationDashboard_fn = new lambdaNodejs.NodejsFunction(this, "OrganizationDashboard", {
+    //   runtime: lambda.Runtime.NODEJS_22_X,
+    //   handler: "index.handler",
+    //   code: lambda.Code.fromAsset(path.join(__dirname, "organizationDashboard")),
+    //   vpc: vpc, // Reference the VPC defined above
+    //   environment: environment,
+    //   securityGroups: [securityGroup], // Associate the security group
+    //   timeout: Duration.seconds(5), // Example timeout, adjust as needed
+    // })
+
+    // organizationDashboardResource.addMethod('POST', new apigw.LambdaIntegration(organizationDashboard_fn, integration_parameters), response_parameters)
+
+
+    const donationcenterLogin_fn = new lambdaNodejs.NodejsFunction(this, "DonationCenterLogin", {
+      runtime: lambda.Runtime.NODEJS_22_X,
+      handler: "index.handler",
+      code: lambda.Code.fromAsset(path.join(__dirname, "donationCenterLogin")),
+      vpc: vpc, // Reference the VPC defined above
+      environment: environment,
+      securityGroups: [securityGroup], // Associate the security group
+      timeout: Duration.seconds(5), // Example timeout, adjust as needed
+    })
+
+    donationcenterLoginResource.addMethod('POST', new apigw.LambdaIntegration(donationcenterLogin_fn, integration_parameters), response_parameters)
+
+    // const donorListcenter_fn = new lambdaNodejs.NodejsFunction(this, "DonorListCenter", {
+    //   runtime: lambda.Runtime.NODEJS_22_X,
+    //   handler: "index.handler",
+    //   code: lambda.Code.fromAsset(path.join(__dirname, "donorListcenter")),
+    //   vpc: vpc, // Reference the VPC defined above
+    //   environment: environment,
+    //   securityGroups: [securityGroup], // Associate the security group
+    //   timeout: Duration.seconds(5), // Example timeout, adjust as needed
+    // })
+
+    // donationcenterLoginResource.addMethod('POST', new apigw.LambdaIntegration(donorListcenter_fn, integration_parameters), response_parameters)
+
+
   }
 }
