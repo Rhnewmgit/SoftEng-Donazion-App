@@ -29,33 +29,44 @@ export const handler = async (event) => {
             return constructResponse(400, "Invalid token, log back in first.")
         }
     }
-    catch (error) {
+    catch (err) {
         return constructResponse(400, "Invalid token, log back in first: " + err?.message)
     }
-    try {
-        const aRequest = typeof event.body === 'string' ? JSON.parse(event.body) : event.body;
-        const { category_name, category_item_name } = aRequest;
-        const query = 'DELETE FROM an_organization.category WHERE category_name = ? and category_item_name = ?';
-        const [result] = await pool.execute(query, [category_name, category_item_name]);
+    const { category: category_name } = event
+    if (!category_name) {
+        return constructResponse(400, "No category provided")
+    }
+    try {        
+        const query = 'DELETE FROM category WHERE name = ?';
+        const [result] = await pool.execute(query, [category_name]);
+        if (!result.affectedRows) {
+            return constructResponse(400, "Could not delete category: " + category_name)
+        }
     }
     // Should only trigger in the case that there is:
     // - Connection issues to the database (Cannot connect in the first place or disconnect while using it).
     // - Missing information that was supposed to be inputted.
     // - Can't find the inputted information.
-    catch (error) {
-        if (error.code === 'PROTOCOL_CONNECTION_LOST' || error.code === 'ECONNREFUSED') {
+    catch (err) {
+        if (err.code === 'PROTOCOL_CONNECTION_LOST' || err.code === 'ECONNREFUSED') {
             return constructResponse(400, "Database connection could not be secured.");
         }
-        else if (error.code === 'ER_BAD_NULL_ERROR' || error.errno === 1048) {
+        else if (err.code === 'ER_BAD_NULL_ERROR' || err.errno === 1048) {
             return constructResponse(400, "Missing required information to add a category.");
         }
-        else if (error.code === 'ER_BAD_FIELD_ERROR') {
+        else if (err.code === 'ER_BAD_FIELD_ERROR') {
             return constructResponse(400, "Inputted category name cannot be found.");
         } else {
-            return constructResponse(400, "An unexpected error has occured for an unknown reason.");
+            return constructResponse(400, "SQL error: " + err)
         }
     }
-    const [rows] = await pool.execute('SELECT DISTINCT category_name FROM an_organization.category');
-    const result = { categories: rows.map(row => row.category_name) };
-    return constructResponse(200, result);
+    try {
+        const [rows] = await pool.execute('SELECT DISTINCT name FROM category');
+        const result = { categories: rows.map(row => row.name) };
+        return constructResponse(200, result);
+    } 
+    catch (err) {
+        return constructResponse(400, "SQL error: " + err)
+    }
+
 }
