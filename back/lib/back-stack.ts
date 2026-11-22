@@ -193,17 +193,17 @@ export class BackStack extends cdk.Stack {
 
     organizationLoginResource.addMethod('POST', new apigw.LambdaIntegration(organizationLogin_fn, integration_parameters), response_parameters)
 
-    // const organizationDashboard_fn = new lambdaNodejs.NodejsFunction(this, "OrganizationDashboard", {
-    //   runtime: lambda.Runtime.NODEJS_22_X,
-    //   handler: "index.handler",
-    //   code: lambda.Code.fromAsset(path.join(__dirname, "organizationDashboard")),
-    //   vpc: vpc, // Reference the VPC defined above
-    //   environment: environment,
-    //   securityGroups: [securityGroup], // Associate the security group
-    //   timeout: Duration.seconds(5), // Example timeout, adjust as needed
-    // })
+    const organizationDashboard_fn = new lambdaNodejs.NodejsFunction(this, "OrganizationDashboard", {
+      runtime: lambda.Runtime.NODEJS_22_X,
+      handler: "index.handler",
+      code: lambda.Code.fromAsset(path.join(__dirname, "organizationDashboard")),
+      vpc: vpc, // Reference the VPC defined above
+      environment: environment,
+      securityGroups: [securityGroup], // Associate the security group
+      timeout: Duration.seconds(5), // Example timeout, adjust as needed
+    })
 
-    // organizationDashboardResource.addMethod('POST', new apigw.LambdaIntegration(organizationDashboard_fn, integration_parameters), response_parameters)
+    organizationDashboardResource.addMethod('POST', new apigw.LambdaIntegration(organizationDashboard_fn, integration_parameters), response_parameters)
 
 
     const donationcenterLogin_fn = new lambdaNodejs.NodejsFunction(this, "DonationCenterLogin", {

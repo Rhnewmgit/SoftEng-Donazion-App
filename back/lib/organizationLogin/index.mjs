@@ -15,7 +15,7 @@ function getOrgHash() {
 	return new Promise((resolve, reject) => {
 		pool.query("SELECT * FROM organization", (err, rows) => {
 			if (err) { return reject(err.sqlMessage) }
-			if ((rows)) {
+			if (rows?.length) {
 				if (rows.length > 1) {
 					return reject(`${rows.length} different rows in organization found`)
 				}
