@@ -1,4 +1,3 @@
-import { config } from './config.mjs'
 import mysql from 'mysql2/promise'
 import bcrypt from 'bcryptjs'
 import jwt from 'jsonwebtoken'
@@ -13,6 +12,9 @@ var pool = mysql.createPool({
 const jwt_secret = process.env.JWT_SECRET
 
 export const handler = async (event) => {
+    if (event?.body) {
+		event = JSON.parse(event.body)
+	}
     const token = event?.token;
     // Token handling to ensure that there is a valid token when adding a category.
     const constructResponse = (code, payload) => {

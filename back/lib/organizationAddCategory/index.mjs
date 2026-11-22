@@ -1,4 +1,3 @@
-import { config } from './config.mjs'
 import mysql from 'mysql2/promise'
 import jwt from 'jsonwebtoken'
 
@@ -12,6 +11,9 @@ var pool = mysql.createPool({
 const jwt_secret = process.env.JWT_SECRET
 
 export const handler = async (event) => {
+    if (event?.body) {
+		event = JSON.parse(event.body)
+	}
     const token = event?.token;
     // Token handling
     const constructResponse = (code, payload) => {
