@@ -218,17 +218,17 @@ export class BackStack extends cdk.Stack {
 
     donationcenterLoginResource.addMethod('POST', new apigw.LambdaIntegration(donationcenterLogin_fn, integration_parameters), response_parameters)
 
-    // const donorListcenter_fn = new lambdaNodejs.NodejsFunction(this, "DonorListCenter", {
-    //   runtime: lambda.Runtime.NODEJS_22_X,
-    //   handler: "index.handler",
-    //   code: lambda.Code.fromAsset(path.join(__dirname, "donorListcenter")),
-    //   vpc: vpc, // Reference the VPC defined above
-    //   environment: environment,
-    //   securityGroups: [securityGroup], // Associate the security group
-    //   timeout: Duration.seconds(5), // Example timeout, adjust as needed
-    // })
+    const donorListcenter_fn = new lambdaNodejs.NodejsFunction(this, "DonorListCenter", {
+      runtime: lambda.Runtime.NODEJS_22_X,
+      handler: "index.handler",
+      code: lambda.Code.fromAsset(path.join(__dirname, "donorListcenter")),
+      vpc: vpc, // Reference the VPC defined above
+      environment: environment,
+      securityGroups: [securityGroup], // Associate the security group
+      timeout: Duration.seconds(5), // Example timeout, adjust as needed
+    })
 
-    // donationcenterLoginResource.addMethod('POST', new apigw.LambdaIntegration(donorListcenter_fn, integration_parameters), response_parameters)
+    donationcenterLoginResource.addMethod('POST', new apigw.LambdaIntegration(donorListcenter_fn, integration_parameters), response_parameters)
 
 
   }
