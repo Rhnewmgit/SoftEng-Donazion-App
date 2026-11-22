@@ -1,7 +1,7 @@
 import mysql from 'mysql2/promise'
 import bcrypt from 'bcryptjs'
 import jwt from 'jsonwebtoken'
-import 'dotenv/config' // TESTING
+// import 'dotenv/config' // TESTING
 
 var pool = mysql.createPool({
     host: process.env.RDS_HOST,
@@ -74,14 +74,14 @@ export const handler = async (event) => {
 }
 
 
-console.log(await handler({
-    "name": "testcenter0",
-    "street1": "100 Main St.",
-    "street2": "floor 2",
-    "zip": 12345,
-    "city": "Worcester",
-    "state": "MA",
-    "long": 42.274088715886016,
-    "lat": -71.80800962824668,
-    "password": "testpass0"
-})) // TESTING
+// console.log(await handler({
+//     "name": "testcenter0",
+//     "street1": "100 Main St.",
+//     "street2": "floor 2",
+//     "zip": 12345,
+//     "city": "Worcester",
+//     "state": "MA",
+//     "long": 42.274088715886016,
+//     "lat": -71.80800962824668,
+//     "password": "testpass0"
+// })) // TESTING
