@@ -1,7 +1,0 @@
-{
-  "name": "removeCategory",
-  "version": "0.1.0",
-  "dependencies": {
-    "mysql2": "^3.24.6"
-  }
-}
