@@ -8,31 +8,30 @@ import styles from "@/app/page.module.css";
 
 
 
-// FAKE API CALL TO BE REPLACED WHEN API IS FINISHED
+// REAL API: POST /api/donor/listcenter
+const API_URL = "https://plx0u8g05c.execute-api.us-east-2.amazonaws.com/prod";
+
 type ListCentersResult = {
   statusCode: number;
   body: { centers?: { name: string }[]; error?: string };
 };
 
-const PAGE_SIZE = 3; // centers per page (ask Maxwell what the real API uses)
-
-const FAKE_CENTERS = [
-  { name: "Downtown Donation Center" },
-  { name: "Westside Center" },
-  { name: "Northgate Center" },
-  { name: "Lakeview Center" },
-  { name: "Elm Street Center" },
-  { name: "Riverside Center" },
-  { name: "Hilltop Center" },
-];
+const PAGE_SIZE = 3;
 
 async function listDonationCenters(page: number): Promise<ListCentersResult> {
-  if (page < 1) {
-    return { statusCode: 400, body: { error: "Unable to retrieve donationCenter list" } };
+  try {
+    const response = await fetch(`${API_URL}/api/donor/listcenter`, {
+      method: "POST",
+      body: JSON.stringify({ page, pageSize: PAGE_SIZE }),
+    });
+    const data = await response.json();
+    if (response.status === 200) return { statusCode: 200, body: { centers: data } };
+    return { statusCode: response.status, body: { error: String(data) } };
+  } catch {
+    return { statusCode: 500, body: { error: "Could not reach the server" } };
   }
-  const start = (page - 1) * PAGE_SIZE;
-  return { statusCode: 200, body: { centers: FAKE_CENTERS.slice(start, start + PAGE_SIZE) } };
 }
+
 
 
 

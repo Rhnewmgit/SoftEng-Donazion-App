@@ -6,16 +6,26 @@ import { useState } from "react";
 
 
 
+// REAL API: POST /api/organization/login
+const API_URL = "https://plx0u8g05c.execute-api.us-east-2.amazonaws.com/prod";
 
-// FAKE API CALL TO BE REPLACED WHEN API IS FINISHED
 type LoginResult = { statusCode: number; body: { token?: string; error?: string } };
 
 async function loginOrganization(password: string): Promise<LoginResult> {
-  if (password === "admin123") {
-    return { statusCode: 200, body: { token: "fake-token-123" } };
+  try {
+    const response = await fetch(`${API_URL}/api/organization/login`, {
+      method: "POST",
+      body: JSON.stringify({ password }),
+    });
+    const data = await response.json();
+    if (response.status === 200) return { statusCode: 200, body: { token: data.token } };
+    return { statusCode: response.status, body: { error: String(data) } };
+  } catch (err: any) {
+    console.log(err)
+    return { statusCode: 500, body: { error: JSON.stringify(err)} };
   }
-  return { statusCode: 400, body: { error: "password was incorrect" } };
 }
+
 
 
 
