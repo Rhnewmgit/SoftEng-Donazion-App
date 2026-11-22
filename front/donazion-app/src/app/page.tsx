@@ -35,12 +35,12 @@ export default function Home() {
         <div className={styles.ctas}>
 
 
-          {/* NEXT BUTTON    Doner Dashboard*/}
+          {/* NEXT BUTTON    Donor Dashboard*/}
 
           <Link
             className={styles.primary} 
             href="/donor">
-            Doner Dashboard
+            Donor Dashboard
           </Link>
 
            {/* NEXT BUTTON    Organization     was      styles.secondary*/}
