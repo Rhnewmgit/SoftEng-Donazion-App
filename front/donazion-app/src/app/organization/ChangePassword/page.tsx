@@ -6,18 +6,26 @@ import { useRequireOrgLogin, logOutOrg } from "@/lib/orgAuth";
 
 import { useState } from "react";
 
-// FAKE API CALL TO BE REPLACED WHEN API IS FINISHED
-type ChangePasswordResult = { statusCode: number; body: { error?: string } };
+// REAL API: POST /api/organization/passwordreset
+const API_URL = "https://plx0u8g05c.execute-api.us-east-2.amazonaws.com/prod";
+
+type ChangePasswordResult = { statusCode: number; body: { token?: string; error?: string } };
 
 async function changeOrgPassword(oldPass: string, newPass: string): Promise<ChangePasswordResult> {
-  if (oldPass !== "admin123") {
-    return { statusCode: 400, body: { error: "password incorrect" } };
+  try {
+    const token = localStorage.getItem("orgToken") ?? "";
+    const response = await fetch(`${API_URL}/api/organization/passwordreset`, {
+      method: "POST",
+      body: JSON.stringify({ token, oldPass, newPass }),
+    });
+    const data = await response.json();
+    if (response.status === 200) return { statusCode: 200, body: { token: data.token } };
+    return { statusCode: response.status, body: { error: String(data) } };
+  } catch {
+    return { statusCode: 500, body: { error: "Could not reach the server" } };
   }
-  if (newPass === oldPass) {
-    return { statusCode: 400, body: { error: "new password same as old password" } };
-  }
-  return { statusCode: 200, body: {} };
 }
+
 
 
 
@@ -36,8 +44,10 @@ export default function ChangePassword() {
     const result = await changeOrgPassword(oldPass, newPass);
 
     if (result.statusCode === 200) {
+      localStorage.setItem("orgToken", result.body.token ?? "");
       setMessage("Password changed");
-    } else {
+    } 
+    else {
       setMessage(result.body.error ?? "Could not change password");
     }
   }

@@ -6,18 +6,37 @@ import { useState, useEffect } from "react";
 
 
 
-// FAKE API CALL TO BE REPLACED WHEN API IS FINISHED
+// REAL API: POST /api/organization/dashboard
+const API_URL = "https://plx0u8g05c.execute-api.us-east-2.amazonaws.com/prod";
+
 type DashboardResult = {
   statusCode: number;
   body: { centerCount?: number; itemCount?: number; totalValue?: number; error?: string };
 };
 
 async function getOrgDashboard(token: string): Promise<DashboardResult> {
-  if (token === "fake-token-123") {
-    return { statusCode: 200, body: { centerCount: 2, itemCount: 12, totalValue: 56.70 } };
+  try {
+    const response = await fetch(`${API_URL}/api/organization/dashboard`, {
+      method: "POST",
+      body: JSON.stringify({ token }),
+    });
+    const data = await response.json();
+    if (response.status === 200) {
+      return {
+        statusCode: 200,
+        body: {
+          centerCount: Number(data.donationCenterCount ?? 0),
+          itemCount: Number(data.itemCount ?? 0),
+          totalValue: Number(data.itemTotalValue ?? 0),
+        },
+      };
+    }
+    return { statusCode: response.status, body: { error: String(data) } };
+  } catch {
+    return { statusCode: 500, body: { error: "Could not reach the server" } };
   }
-  return { statusCode: 400, body: { error: "invalid token" } };
 }
+
 
 
 
