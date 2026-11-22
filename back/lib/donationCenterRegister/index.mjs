@@ -42,7 +42,6 @@ export const handler = async (event) => {
         const hash = bcrypt.hashSync(password, saltRounds)
         const centerQuery = 'INSERT INTO donation_center (name,password_hash,street_address_one,street_address_two,latitude,longitude,city,state,zip) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)';
         await pool.execute(centerQuery, [donation_center_name, 
-            donation_center_name,
             hash, 
             street_address_one, 
             street_address_two,
