@@ -157,17 +157,30 @@ export class BackStack extends cdk.Stack {
     }
 
     // Add a POST method to the '/organization/category/add' resource
-    // const addCategory_fn = new lambdaNodejs.NodejsFunction(this, "OrganizationAddCategory", {
-    //   runtime: lambda.Runtime.NODEJS_22_X,
-    //   handler: "index.handler",
-    //   code: lambda.Code.fromAsset(path.join(__dirname, "addCategory")),
-    //   vpc: vpc, // Reference the VPC defined above
-    //   environment: environment,
-    //   securityGroups: [securityGroup], // Associate the security group
-    //   timeout: Duration.seconds(5), // Example timeout, adjust as needed
-    // })
-    //
-    // organizationCategoryAddResource.addMethod('POST', new apigw.LambdaIntegration(addCategory_fn, integration_parameters), response_parameters)
+    const addCategory_fn = new lambdaNodejs.NodejsFunction(this, "OrganizationAddCategory", {
+      runtime: lambda.Runtime.NODEJS_22_X,
+      handler: "index.handler",
+      code: lambda.Code.fromAsset(path.join(__dirname, "organizationAddCategory")),
+      vpc: vpc, // Reference the VPC defined above
+      environment: environment,
+      securityGroups: [securityGroup], // Associate the security group
+      timeout: Duration.seconds(5), // Example timeout, adjust as needed
+    })
+    
+    organizationCategoryAddResource.addMethod('POST', new apigw.LambdaIntegration(addCategory_fn, integration_parameters), response_parameters)
+
+    const removeCategory_fn = new lambdaNodejs.NodejsFunction(this, "OrganizationRemoveCategory", {
+      runtime: lambda.Runtime.NODEJS_22_X,
+      handler: "index.handler",
+      code: lambda.Code.fromAsset(path.join(__dirname, "organizationRemoveCategory")),
+      vpc: vpc, // Reference the VPC defined above
+      environment: environment,
+      securityGroups: [securityGroup], // Associate the security group
+      timeout: Duration.seconds(5), // Example timeout, adjust as needed
+    })
+    
+    organizationCategoryRemoveResource.addMethod('POST', new apigw.LambdaIntegration(removeCategory_fn, integration_parameters), response_parameters)
+
 
     const organizationPasswordReset_fn = new lambdaNodejs.NodejsFunction(this, "OrganizationResetPassword", {
       runtime: lambda.Runtime.NODEJS_22_X,
@@ -217,6 +230,31 @@ export class BackStack extends cdk.Stack {
     })
 
     donationcenterLoginResource.addMethod('POST', new apigw.LambdaIntegration(donationcenterLogin_fn, integration_parameters), response_parameters)
+
+    const donationcenterRegister_fn = new lambdaNodejs.NodejsFunction(this, "DonationCenterRegister", {
+      runtime: lambda.Runtime.NODEJS_22_X,
+      handler: "index.handler",
+      code: lambda.Code.fromAsset(path.join(__dirname, "donationCenterRegister")),
+      vpc: vpc, // Reference the VPC defined above
+      environment: environment,
+      securityGroups: [securityGroup], // Associate the security group
+      timeout: Duration.seconds(5), // Example timeout, adjust as needed
+    })
+
+    donationcenterRegisterResource.addMethod('POST', new apigw.LambdaIntegration(donationcenterRegister_fn, integration_parameters), response_parameters)
+
+      const donationcenterDelete_fn = new lambdaNodejs.NodejsFunction(this, "DonationCenterDelete", {
+      runtime: lambda.Runtime.NODEJS_22_X,
+      handler: "index.handler",
+      code: lambda.Code.fromAsset(path.join(__dirname, "donationCenterDelete")),
+      vpc: vpc, // Reference the VPC defined above
+      environment: environment,
+      securityGroups: [securityGroup], // Associate the security group
+      timeout: Duration.seconds(5), // Example timeout, adjust as needed
+    })
+
+    donationcenterDeleteResource.addMethod('POST', new apigw.LambdaIntegration(donationcenterDelete_fn, integration_parameters), response_parameters)
+
 
     const donorListcenter_fn = new lambdaNodejs.NodejsFunction(this, "DonorListCenter", {
       runtime: lambda.Runtime.NODEJS_22_X,
