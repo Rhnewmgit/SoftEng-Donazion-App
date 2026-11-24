@@ -107,8 +107,9 @@ const API_URL = "https://plx0u8g05c.execute-api.us-east-2.amazonaws.com/prod";
           </button>
 
           {/* NEXT BUTTON   Remove from Organization*/}
-
-          <label>Donation Center Name</label>
+          <br></br>
+          <h2>DELETE DONATION CENTER</h2>
+          <label>Confirm Name</label>
           <input value={Name} onChange={(e) => setName(e.target.value)}/>
           <label>Confirm Password</label>
           <input type="password" value={Password} onChange={(e) => setPassword(e.target.value)}/>
