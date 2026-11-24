@@ -41,7 +41,8 @@ export const handler = async (event) => {
         const saltRounds = 8
         const hash = bcrypt.hashSync(password, saltRounds)
         const centerQuery = 'INSERT INTO donation_center (name,password_hash,street_address_one,street_address_two,latitude,longitude,city,state,zip) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)';
-        await pool.execute(centerQuery, [donation_center_name, 
+        await pool.execute(centerQuery, [
+            donation_center_name, 
             hash, 
             street_address_one, 
             street_address_two,
@@ -68,7 +69,7 @@ export const handler = async (event) => {
             return constructResponse(400, "SQL error: " + err);
         }
     }
-    const newToken = jwt.sign({ admin: true }, jwt_secret, { expiresIn: "24h" });
+    const newToken = jwt.sign({ username: donation_center_name }, jwt_secret, { expiresIn: "24h" });
     const result = { name: donation_center_name, token: newToken};
     return constructResponse(200, result);
 }

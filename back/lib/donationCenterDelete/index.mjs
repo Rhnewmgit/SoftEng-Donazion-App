@@ -34,7 +34,7 @@ export const handler = async (event) => {
     try {
         const data = jwt.verify(token, jwt_secret)
         if (data?.username != event?.name) {
-            return constructResponse(400, "Invalid token: username does not match provided username")
+            return constructResponse(400, "Invalid token: token username does not match provided username")
         }
     }
     catch (err) {
