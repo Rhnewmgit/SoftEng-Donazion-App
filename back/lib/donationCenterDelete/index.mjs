@@ -15,7 +15,14 @@ export const handler = async (event) => {
     if (event?.body) {
 		event = JSON.parse(event.body)
 	}
-    const token = event?.token;
+
+    if (!donation_center_name || String(donation_center_name).trim() === '') {
+        return constructResponse(400, "No donation center name provided");
+    }
+    if (!password || String(password).trim() === '') {
+        return constructResponse(400, "No password provided");
+    }
+    const { name: donation_center_name, password, token } = event
     // Token handling to ensure that there is a valid token when adding a category.
     const constructResponse = (code, payload) => {
         return {
@@ -27,20 +34,13 @@ export const handler = async (event) => {
     try {
         const data = jwt.verify(token, jwt_secret)
         if (data?.username != event?.name) {
-            return constructResponse(400, "Invalid token, log back in first.")
+            return constructResponse(400, "Invalid token: username does not match provided username")
         }
     }
     catch (err) {
         return constructResponse(400, "Invalid token, log back in first: " + err?.message)
     }
-    const { name: donation_center_name, password } = event
     try {
-        if (!donation_center_name || String(donation_center_name).trim() === '') {
-            return constructResponse(400, "No donation center name provided");
-        }
-        if (!password || String(password).trim() === '') {
-            return constructResponse(400, "No password provided");
-        }
         const [rows] = await pool.execute('SELECT password_hash FROM donation_center WHERE name = ?', [donation_center_name]);
         if (!rows.length) {
             return constructResponse(400, "Could not find user: " + donation_center_name)
