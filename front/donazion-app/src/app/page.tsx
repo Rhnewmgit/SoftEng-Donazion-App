@@ -18,7 +18,7 @@ export default function Home() {
 
         <div className={styles.intro}>
           <h1>
-            DONATION{" "}
+            DONAZION{" "}
           </h1>
 
 
@@ -55,7 +55,7 @@ export default function Home() {
 
           <Link
             className={styles.primary}
-            href="/donation-center">
+            href="/donation-center/login">
             Donation Center
           </Link>
 
