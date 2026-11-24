@@ -16,13 +16,13 @@ export const handler = async (event) => {
 		event = JSON.parse(event.body)
 	}
 
+    const { name: donation_center_name, password, token } = event
     if (!donation_center_name || String(donation_center_name).trim() === '') {
         return constructResponse(400, "No donation center name provided");
     }
     if (!password || String(password).trim() === '') {
         return constructResponse(400, "No password provided");
     }
-    const { name: donation_center_name, password, token } = event
     // Token handling to ensure that there is a valid token when adding a category.
     const constructResponse = (code, payload) => {
         return {
