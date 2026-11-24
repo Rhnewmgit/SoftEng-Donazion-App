@@ -14,14 +14,6 @@ export default function DonationCenterDashboard() {
     name: string;
   }
 
-  const [Name, setName] = useState("");
-  const [Password, setPassword] = useState("");
-  const [WishlistItem, setWishlistItem] = useState<string>("");
-  const router = useRouter();
-
-// REAL API: POST /api/donationcenter/login
-const API_URL = "https://plx0u8g05c.execute-api.us-east-2.amazonaws.com/prod";
-
   const addWishlistItem = async () => {
        
     }
@@ -30,53 +22,32 @@ const API_URL = "https://plx0u8g05c.execute-api.us-east-2.amazonaws.com/prod";
        
     }
 
-  const removeFromOrganization = async (name: string, password: string) => {
-
-    const token = localStorage.getItem("donToken");
-
-    try {
-      const response = await fetch (
-        `${API_URL}/api/donationcenter/delete`,
-        {
-          method: "POST",
-          body: JSON.stringify({
-            token: token,
-            name: name,
-            password: password
-          })
-        }
-      )
-
-      const data = await response.json();
-
-      if(!response.ok){
-        alert(
-          typeof data === "string"
-          ? data
-          : data.error || "Failed to delete donation center."
-        )
-        return
-      }
-
-      localStorage.removeItem("donToken");
-
-      alert("Donation center deleted successfully.");
-
+  const removeFromOrganization = async (centerId: string) => {
+    setDonationCenters((prev) => prev.filter((center) => center.id !== centerId));
     router.push("/donation-center/login")
-    } catch (error){
-      console.error("Deletion error:", error)
-      alert("Could not connect to the server.")
-    }
+
   }
+
+
+  const [WishlistItem, setWishlistItem] = useState<string>("");
+  const [donationCenters, setDonationCenters] = useState<DonationCenter[]>([
+    {id: "1", name: "Worcester Donation Center"},
+    {id: "2", name: "Boston Donation Center"},
+    {id: "3", name: "New York Donation Center"}
+  ]);
+  const router = useRouter();
     
+
+
+
   return (
-     <div className={styles.page}>
+    <div className={styles.page}>
         <main className={styles.main}>
    
           
         <h1>Donation Center Dashboard</h1>
 
-        
+        <div className={styles.ctas}>
         
 
           {/* NEXT BUTTON    List Inventory*/}
@@ -108,12 +79,7 @@ const API_URL = "https://plx0u8g05c.execute-api.us-east-2.amazonaws.com/prod";
 
           {/* NEXT BUTTON   Remove from Organization*/}
 
-          <label>Donation Center Name</label>
-          <input value={Name} onChange={(e) => setName(e.target.value)}/>
-          <label>Confirm Password</label>
-          <input type="password" value={Password} onChange={(e) => setPassword(e.target.value)}/>
-
-          <button className={styles.primary} onClick={() => removeFromOrganization(Name, Password)}
+          <button className={styles.primary} onClick={() => removeFromOrganization(donationCenters[0].id)}
           style={{ backgroundColor: 'red', color: 'white', border: 'none', padding: '10px 20px' }}>
             Remove from Organization
           </button>
@@ -122,7 +88,7 @@ const API_URL = "https://plx0u8g05c.execute-api.us-east-2.amazonaws.com/prod";
 
 
 
-        
+        </div>
 
 
         <Link href="/donation-center" onClick={logOutDon}>← Log Out</Link>

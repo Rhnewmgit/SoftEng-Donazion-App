@@ -45,7 +45,6 @@ export default function Categories() {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`
           },
           body: JSON.stringify({ 
             token: token,
@@ -56,6 +55,44 @@ export default function Categories() {
 
         if(!response.ok){
           alert(data.error || "Failed to add category");
+          return;
+        }
+
+        setCategories((prev) =>
+        data.categories.map((name: string) => ({
+          name,
+          items: prev.find((cat) => cat.name === name)?.items ?? []
+        })))
+
+        setCategoryName("");
+      } 
+      catch (error) {
+      console.error("Error adding category:", error);
+      alert("Could not connect to the server.")
+      }
+    }
+
+    const removeCategory = async (categoryName: string) => {
+      const trimmed = categoryName.trim();
+      if(!trimmed) return;
+
+      const token = localStorage.getItem("orgToken");
+      
+      try{
+        const response = await fetch(`${API_URL}/api/organization/category/remove`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ 
+            token: token,
+            category: trimmed })
+        });
+
+        const data = await response.json();
+
+        if(!response.ok){
+          alert(data.error || "Failed to remove category");
           return;
         }
 
@@ -190,7 +227,7 @@ export default function Categories() {
                 const isSelected = selectedCategory.name === category.name;
 
                 return (
-                  <li key={category.name}>
+                  <li key={category.name} style={{margin: "2px"}}>
                     <button
                       type="button"
                       onClick={() => setSelectedCategory(category)}
@@ -198,9 +235,26 @@ export default function Categories() {
                         fontWeight: isSelected ? "bold" : "normal",
                         backgroundColor: isSelected ? "#0070f3" : "#f0f0f0",
                         color: isSelected ? "#ffffff" : "#000000",
+                        padding: "2px 5px",
+                        minWidth: "30px",
+                        minHeight: "20px",
+                        marginRight: "7px"
                       }}
                     >
                       {category.name}
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => removeCategory(category.name)}
+                      style={{
+                        fontWeight: isSelected ? "bold" : "normal",
+                        backgroundColor: isSelected ? "#990000" : "#ff0000",
+                        color: isSelected ? "#ffffff" : "#000000",
+                        padding: "0px 5px",
+                        minHeight: "20px",
+                      }}
+                    >
+                      🗑️
                     </button>
                   </li>
                 );

@@ -18,7 +18,7 @@ export default function Home() {
 
         <div className={styles.intro}>
           <h1>
-            DONATION{" "}
+            DONAZION{" "}
           </h1>
 
 

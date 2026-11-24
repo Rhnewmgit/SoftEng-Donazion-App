@@ -5,16 +5,24 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 
-// FAKE API CALL TO BE REPLACED WHEN API IS FINISHED
-type LoginResult = { statusCode: number; body: { token?: string; error?: string } };
+// REAL API: POST /api/donationcenter/login
+const API_URL = "https://plx0u8g05c.execute-api.us-east-2.amazonaws.com/prod";
+
+type LoginResult = { statusCode: number; body: { name?: string; token?: string; error?: string } };
 
 async function loginDonationCenter(name: string, password: string): Promise<LoginResult> {
-  if (name === "Test" && password === "admin123") {
-    return { statusCode: 200, body: { token: "fake-token-123" } };
+  try {
+    const response = await fetch(`${API_URL}/api/donationcenter/login`, {
+      method: "POST",
+      body: JSON.stringify({ name, password }),
+    });
+    const data = await response.json();
+    if (response.status === 200) return { statusCode: 200, body: { name: data.name, token: data.token } };
+    return { statusCode: response.status, body: { error: String(data) } };
+  } catch {
+    return { statusCode: 500, body: { error: "Could not reach the server" } };
   }
-  return { statusCode: 400, body: { error: "password was incorrect" } };
 }
-
 
 
 
@@ -77,7 +85,7 @@ export default function DonationCenter() {
             Login
           </button>
 
-          {/* NEXT BUTTON    Register*/}
+          {/* NEXT BUTTON    Categories & Items*/}
 
           <Link
             className={styles.primary}

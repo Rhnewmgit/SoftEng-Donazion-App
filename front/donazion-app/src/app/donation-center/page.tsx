@@ -87,11 +87,11 @@ export default function DonationCenter() {
             Login
           </button>
 
-          {/* NEXT BUTTON    Register*/}
+          {/* NEXT BUTTON    Categories & Items*/}
 
           <Link
             className={styles.primary}
-            href="/donation-center/register">
+            href="/donation-center/dashboard">
             Register
           </Link>
 
